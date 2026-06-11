@@ -26,6 +26,9 @@ from data_engine import (
 DATA, YEARS = load_all()
 BD_MAP = bd_to_date_map(DATA, YEARS)
 YEAR_OPTS = [{'label': str(y), 'value': y} for y in YEARS]
+from pattern_engine_v2 import run_all_patterns, find_similar_years
+CACHED_PATTERNS = run_all_patterns(DATA, YEARS, min_hit=0.58)
+
 
 # ── Theme ─────────────────────────────────────────────────────────────────────
 BG      = '#0d1117'
@@ -1009,13 +1012,13 @@ def build_pattern_tab(years_sel, period, series):
     )
 
     # ── Run all pattern detectors ─────────────────────────────────────────────
-    all_findings = run_all_patterns(DATA, years_sel, min_hit=0.58)
+    all_findings = CACHED_PATTERNS
     n_high   = sum(1 for f in all_findings if f['confidence']=='HIGH')
     n_medium = sum(1 for f in all_findings if f['confidence']=='MEDIUM')
     n_low    = sum(1 for f in all_findings if f['confidence']=='LOW')
 
     # Similar years
-    sim_years = find_similar_years(DATA, years_sel, ref_year=max(years_sel) if years_sel else None, n_similar=3)
+    sim_years = find_similar_years(DATA, YEARS, ref_year=max(YEARS), n_similar=3)
     sim_txt = ', '.join(f'{yr} (score {sc:.2f})' for yr, sc in sim_years.items()) if sim_years else '—'
 
     # ── Summary bar ───────────────────────────────────────────────────────────
