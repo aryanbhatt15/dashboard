@@ -1166,7 +1166,7 @@ def build_pattern_tab(years_sel, period, series):
         ], style={**CARD,'display':'flex','gap':'12px'}),
     ]
 
-
+server = app.server
 if __name__ == '__main__':
     print('\n' + '='*55)
     print('  CC March Dashboard v2')
